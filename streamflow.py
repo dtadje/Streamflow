@@ -1,187 +1,57 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-"""### Part 3 - Provo River Streamflow Data
 
-You will now create a graph using streamflow data of the Provo River in June 2021.
+def load_streamflow(filename):
+    data = np.genfromtxt(filename,
+                     delimiter=",", dtype=str, skip_header=1)
 
-### Numpy Array Creation & Slicing
+    x = data[:, 0]
+    y_1 = data[:, 1].astype(float)
+    y_2 = data[:, 2].astype(float)
+    y_3 = data[:, 3].astype(float)
+    y_4 = data[:, 4].astype(float)
+    y_5 = data[:, 5].astype(float)
 
-Create and slice the array to create the x and y-axis values. These will correspond to the following columns in the CSV linked on the HW instructions page:
-
-*   x - Date
-*   y_1 - Site 10163000
-*   y_2 - Site 10155200
-*   y_3 - Site 10155500
-*   y_4 - Site 10154200
-*   y_5 - Site 10155000
-"""
+    flows = np.column_stack((y_1, y_2, y_3, y_4, y_5))
+    return x, flows
 
 # ChatGPT helped load the streamflow data and separate the columns.
 # Each column represents a date or a different river monitoring site.
 
-data = np.genfromtxt("June-2021-Provo-River-Streamflow-Rates.csv",
-                     delimiter=",", dtype=str, skip_header=1)
-
-x = data[:, 0]
-y_1 = data[:, 1].astype(float)
-y_2 = data[:, 2].astype(float)
-y_3 = data[:, 3].astype(float)
-y_4 = data[:, 4].astype(float)
-y_5 = data[:, 5].astype(float)
-
-"""### Graphing the Data
-
-Plot x, y_1, y_2, y_3, y_4, and y_5 with the elements shown in the instructions in the code block below.
-"""
 
 # ChatGPT helped fix the x-axis labels and graph formatting.
 # Each line represents streamflow at a monitoring site.
 
-plt.figure(figsize=(12, 6))
+def plot_streamflow(dates, flows, sites):
+    plt.figure(figsize=(12, 6))
 
-positions = range(len(x))
 
-plt.plot(positions, y_1, label="Site 10163000")
-plt.plot(positions, y_2, label="Site 10155200")
-plt.plot(positions, y_3, label="Site 10155500")
-plt.plot(positions, y_4, label="Site 10154200")
-plt.plot(positions, y_5, label="Site 10155000")
+    positions = range(len(dates))
 
-plt.title("Provo River Streamflow Data (2021)")
-plt.xlabel("Date")
-plt.ylabel("Streamflow (cfs)")
+
+    plt.plot(positions, flows[:, 0], label=sites[0])
+    plt.plot(positions, flows[:, 1], label=sites[1])
+    plt.plot(positions, flows[:, 2], label=sites[2])
+    plt.plot(positions, flows[:, 3], label=sites[3])
+    plt.plot(positions, flows[:, 4], label=sites[4])
+
+    plt.title("Provo River Streamflow Data (2021)")
+    plt.xlabel("Date")
+    plt.ylabel("Streamflow (cfs)")
 
 # Show fewer dates so the labels do not overlap.
-ticks = np.linspace(0, len(x)-1, 8, dtype=int)
-plt.xticks(ticks, x[ticks], rotation=45)
+    ticks = np.linspace(0, len(dates)-1, 8, dtype=int)
+    plt.xticks(ticks, dates[ticks], rotation=45)
 
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
-"""### Part 4 - Bicycle Count in Fremont
+# Main program
+sites = ["10163000", "10155200", "10155500", "10154200", "10155000"]
 
-You will now create a graph using bicycle count data of a bridge in Fremont, Seattle.
+dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
 
-### Numpy Array Creation & Slicing
-
-Create and slice the array to create the x and y-axis values. These will correspond to the following columns in the CSV linked on on the HW instructions page:
-
-*   x - Date
-*   y_1 - Fremont Bridge Total
-*   y_2 - Fremont Bridge East Sidewalk
-*   y_3 - Fremont Bridge West Sidewalk
-"""
-
-# ChatGPT helped load the bicycle count data and separate the columns.
-# Each column represents the date, total bikes, or bikes on each sidewalk.
-
-data = np.genfromtxt("Fremont-Bridge-Bicycle-Count.csv",
-                     delimiter=",", dtype=str, skip_header=1)
-
-x = data[:, 0]
-y_1 = data[:, 1].astype(float)
-y_2 = data[:, 2].astype(float)
-y_3 = data[:, 3].astype(float)
-
-"""### Graphing the Data
-
-Plot x, y_1, y_2, and y_3 in this code block.
-"""
-
-# ChatGPT helped improve plotting speed by reducing x-axis labels.
-# Plotting every date label can make large datasets slow.
-
-plt.figure(figsize=(12, 6))
-
-plt.plot(range(len(x)), y_1, label="Fremont Bridge Total")
-plt.plot(range(len(x)), y_2, label="East Sidewalk")
-plt.plot(range(len(x)), y_3, label="West Sidewalk")
-
-plt.title("Fremont Bridge Bicycle Count (2013-2022)")
-plt.xlabel("Date")
-plt.ylabel("Bicycle Count")
-
-# Show only 10 evenly spaced date labels.
-ticks = np.linspace(0, len(x)-1, 10, dtype=int)
-plt.xticks(ticks, x[ticks], rotation=45)
-
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-# Bicycle counts may have decreased because COVID-19
-# caused more people to work from home instead of commuting.
-
-"""### Part 5 - Average U.S. Daily Birth Data
-
-You will now create a graph using average daily birth data in the U.S.
-
-### Numpy Array Creation & Slicing
-
-Slice the array to create the x and y-axis values. These will correspond to the following columns in the CSV linked on the HW instructions page:
-
-*   x - Date
-*   y_1 - Births
-"""
-
-# ChatGPT helped load and slice the birth data.
-# The first column contains dates and the second contains births.
-
-data = np.genfromtxt("2012-US-Birth-Rates.csv",
-                     delimiter=",", dtype=str, skip_header=1)
-
-x = data[:, 0]
-y_1 = data[:, 1].astype(float)
-
-"""### Graphing the Data
-
-Plot x and y_1 with the elements shown in the instructions in the code block below.
-"""
-
-# ChatGPT helped create the graph and curved arrows.
-# The arrows identify holidays when birth rates decrease.
-
-import matplotlib.dates as mdates
-
-dates = np.array(x, dtype="datetime64[D]")
-
-plt.figure(figsize=(12, 4))
-
-plt.plot(dates, y_1, color="lightseagreen")
-
-plt.title("Average U.S. Daily Birth Data")
-plt.xlabel("Date")
-plt.ylabel("Births")
-plt.grid(True)
-
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
-
-# Add holiday annotations with curved arrows.
-holidays = [
-    ("New Year's Day", "2012-01-01"),
-    ("Independence Day", "2012-07-04"),
-    ("Halloween", "2012-10-31"),
-    ("Thanksgiving", "2012-11-22"),
-    ("Christmas", "2012-12-25")
-]
-
-for name, date in holidays:
-    index = np.argmin(np.abs(dates - np.datetime64(date)))
-    plt.annotate(
-        name,
-        xy=(dates[index], y_1[index]),
-        xytext=(0, 35),
-        textcoords="offset points",
-        ha="center",
-        arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=0.3")
-    )
-
-plt.tight_layout()
-plt.show()
-
-# Birth rates may be lower on holidays because hospitals
-# schedule fewer elective deliveries on those days.
+plot_streamflow(dates, flows, sites)
