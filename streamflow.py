@@ -50,6 +50,8 @@ def plot_streamflow(dates, flows, sites):
     plt.savefig("provo_streamflow.png", dpi=150, bbox_inches="tight")
     plt.show()
 def summarize(dates, flows, sites):
+
+
     """Calculate and display streamflow statistics for each monitoring site."""
     # Spreadsheet check for gauge 10163000:
     # MAX = 131.0 cfs
@@ -82,3 +84,11 @@ dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
 plot_streamflow(dates, flows, sites)
 
 summarize(dates, flows, sites)
+
+# Ask the user for a streamflow threshold in cfs
+threshold = float(input("Enter a flow threshold (cfs): "))
+
+# Calculate how many hours each gauge exceeded the threshold
+for i, site in enumerate(sites):
+    hours = np.sum(flows[:, i] > threshold) * 0.25
+    print(f"Gauge {site}: {hours:.2f} hours above {threshold} cfs")
